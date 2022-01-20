@@ -7,9 +7,37 @@
     , initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/bootstrap.css">
+        <style>
+            [class*="col"]{
+                padding: 1rem;
+                background-color: #ffff;
+                border: 2px solid #ffff;
+                color: rgb(10, 10, 10);
+            }
+        </style>
 </head>
-<body>
-    <h1>Hello Boots!</h1>
+
+<body class= >
+    <div class="container">
+        <div class="row g-2">
+            <div class="col-6">
+                <div class="p-3 border bg-info">Column 1 </div>
+            </div>
+                
+            <div class="col-6">
+                <div class="p-3 border bg-warning">Column 2 </div>
+            </div>
+                
+            <div class="col-6">
+                <div class="p-3 border bg-warning">Column 3 </div>
+            </div>
+            <div class="col-6">
+                <div class="p-3 border bg-info">Column 4 </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/bootstrap.js"></script>
 </body>
+
 </html>
