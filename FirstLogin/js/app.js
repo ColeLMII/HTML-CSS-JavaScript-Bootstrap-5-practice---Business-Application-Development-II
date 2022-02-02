@@ -35,7 +35,9 @@ $(document).on('click','#btnSignIn',function(){
         */
         var objNewSessionPromise= $.post('https:www.swollenhippo.com/DS3870/newSession.php', { strUsername:$('#txtEmail').val(), strPassword:$('#txtPassword').val() }, function(result){
             console.log(JSON.parse(result).Outcome);
+            objNewSessionPromise = JSON.parse(result);
         }) 
+
         $.when(objNewSessionPromise).done(function(){
             if(objNewSessionPromise.Outcome == 'Login Failed'){
                 Swal.fire({
@@ -45,11 +47,7 @@ $(document).on('click','#btnSignIn',function(){
                 })
             } else{
                 sessionStorage.setItem('HippoSessionID', objNewSessionPromise.Outcome);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Login Complete',
-                    html: '<h3> Great Job </h3>'
-                })
+                window.location.href='index.html'; //window.location.replace removes from history
             }
         })
     }
