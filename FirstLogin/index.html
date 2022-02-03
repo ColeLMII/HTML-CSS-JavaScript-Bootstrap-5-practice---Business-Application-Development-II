@@ -9,46 +9,25 @@
     <link rel="stylesheet" href="css/lib/"
 </head>
 <body class=bg-primary>
-    <div class="display:flex; justify-content: center; ign-items: center;" id="peopleCards">
-       
-    </div>
-    
+    <select id=""cboTaskCategory" class=""form-control">
+
+    </select>
 
     <script src="js/lib/jquery-3.6.0.min.js"></script> 
     <script src="js/lib/bootstrap.bundle.min.js"></script>
     <script src="js/lib/sweetalert.js"></script>
     <script src="js/app.js"></script>
     <script>
-        //make a request to a server using an API key
-        var arrEmployees;
-        $.getJSON('https://www.swollenhippo.com/getEmployeesByAPIKey.php?APIKey=Mickey2021!', function(result){
-            console.log(result);
-            arrEmployees=result;
-
-            $.each(arrEmployees,function(i, person){
-                console.log(person.FirstName);
-                buildEmployeeCards(person);
+        if(sessionStorage.getItem('HippoSessionID')){
+            $.getJSON('https://www.swollenhippo.com/DS3870/getTaskCategoriesBySessionID.php?strSessionID=' + sessionStorage.getItem('HippoSessionID'), function(result){
+                $.each(result,function(i,category){
+                    $('#cboTaskCategory').append('<option value="' + category.CategoryID + '">' + category.Description + '</option>');
+                })
             })
-        })
-
-        function buildEmployeeCards(person){
-           let strHTML= '<div class="card col-4 text-center" style="margin:auto;">';
-               strHTML+= '<img src="images/hippo.png" alt="Hippo Login" class="p-5" >';
-               strHTML+='<h1 class="mb-1"><a href="mailto:"'+ person.Email + '<span class="fw-bold">'+ person.FirstName+ '</span>'+ person.LastName+' </a> </h1>';
-               strHTML+='<h5 class="mb-5">'+ person.Postion+'</h2>';
-                strHTML+='<div class="row">';
-                    strHTML+='<div class="col">';
-                        strHTML+='<h4 class="text-center h-0">Hire Date</h4>';
-                        strHTML+='<h3 class="col text-center">'+ person.HireDate +'</h2>';
-                            strHTML+='</div>';
-                            strHTML+='<div class="col">';
-                                strHTML+='<h4 class="text-center  h-0">Pay Rate</h4>';
-                                strHTML+='<h3 class="col text-center"> $12.00</h2>';
-                                    strHTML+='</div>';
-                                    strHTML+='</div>';
-                                    strHTML+='</div>';
-            $('#peopleCards').append(strHTML);
+        } else {
+            window.location.href = 'firstlogin.html';
         }
     </script>
+    
 </body>
 </html>
