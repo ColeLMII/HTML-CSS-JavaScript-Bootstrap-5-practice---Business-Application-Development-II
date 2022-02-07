@@ -56,7 +56,47 @@ $(document).on('click','#btnSignIn',function(){
 })
 
 //for creating new users
+/*$(document).on('click','#btnCreateNewAccount', function(){
+    window.location.href='createAcc.html';
+})*/
 
+$(document).on('click', '#btnCreate', function(){
+    var newAccount = $.post('https://swollenhippo.com/DS3870/Tasks/newAccount.php', {strUsername:$('#txtEmail').val(),strPassword:$('#txtPassword').val()}, function(result){
+    console.log(JSON.parse(result).Outcome);
+    newAccount = JSON.parse(result);
+    })
+
+    $.when(newAccount).done(function(){
+        if(newAccount.Outcome == 'Error - User Not Created'){
+            Swal.fire({
+                icon:'error',
+                title:'User Account not Created',
+                html: '<p> try again </p>'
+            }) 
+        }
+        if(newAccount.Outcome == 'User Already Exists'){
+            Swal.fire({
+                icon:'error',
+                title:'User Already Exists',
+                html: '<p> Login with your existing credentials </p>'
+            })
+            
+        }
+        else{
+            Swal.fire({
+                icon:'success',
+                title:'Account Created Successfully',
+                html: '<p> Please login with your credentials </p>'
+            })
+            
+        }
+    })
+    /*
+        what code should be used in order to wait until the user presses 'ok' on the sweetalert, then return back to the login page. I've tried using
+            window.location.href='login.html';
+        that returns the user before they can read and acknowledge the sweetalert message.
+    */
+})
 
 function validateUsername(strUsername){
     let reg = /\S+@\S+\.\S+/;
