@@ -117,7 +117,7 @@ $(document).on('click', '#btnAddTask', function(result){
                     Swal.fire({
                         icon: 'error',
                         title: 'Title Not Added',
-                        html: <p> Verify your task data and try again.</p>
+                        html: '<p> Verify your task data and try again.</p>'
                     })
                 }
             })

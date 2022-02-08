@@ -4,17 +4,41 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>HippoTask</title>
+  <link rel="stylesheet" href="css/lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/lib/main.css"
 </head>
 <body>
-  <input 
+  <div class="col-8 container-fluid ">
+    <input id="txtTaskName" type="text" class="form-control" placeholder="Task Name" aria-label="Task Name">
+    <input id="txtLocation" type="text" class="form-control" placeholder="Location of Task" aria-label="Enter Location of Task">
+    <input id="txtDueDate" type="datetime-local" class="form-control" aria-label="Due Date">
+    <input id="txtNotes" row="3" class="form-control"aria-label="Task Notes">
+
+  </div>
 
   <script src="js/lib/jquery-3.6.0.min.js"></script> 
   <script src="js/lib/bootstrap.bundle.min.js"></script>
   <script src="js/lib/sweetalert.js"></script>
   <script src="js/app.js"></script>
   <script>
-      ...
+      if(sessionStorage.getItem('HippoTaskID')){
+        let strmySessionID= sessionStorage.getItem('HippoTaskID');
+        $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php?strSessionID='+ strmySessionID, function(result){
+          if(result.Outcome!='Valid Session'){
+              Swal.fire({
+              icon: 'error',
+              title: 'Expired Session',
+              html: '<p>Oops appears your session has expired.</p>'
+            }).then((result)=>{
+              sessStorage.removeItem('HippoTaskID');
+              window.location.href="login.html";
+            })
+          }
+        })
+      } else{
+        window.location.href="login.html";
+      }
     </script>
 </body>
 </html>
