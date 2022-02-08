@@ -33,8 +33,8 @@ $(document).on('click','#btnSignIn',function(){
         /*
             do not do this in production this is unprotected API
         */
-        var objNewSessionPromise= $.post('https:www.swollenhippo.com/DS3870/newSession.php', { strUsername:$('#txtEmail').val(), strPassword:$('#txtPassword').val() }, function(result){
-            console.log(JSON.parse(result).Outcome);
+        var objNewSessionPromise= $.post('https://www.swollenhippo.com/DS3870/Tasks/newSession.php', { strUsername:$('#txtEmail').val(), strPassword:$('#txtPassword').val() }, function(result){
+            //console.log(JSON.parse(result).Outcome);
             objNewSessionPromise = JSON.parse(result);
         }) 
 
@@ -46,7 +46,7 @@ $(document).on('click','#btnSignIn',function(){
                     html: '<p> Review Username and Password </p>'
                 })
             } else{
-                sessionStorage.setItem('HippoSessionID', objNewSessionPromise.Outcome);
+                sessionStorage.setItem('HippoTaskID', objNewSessionPromise.Outcome);
                 window.location.href='index.html'; //window.location.replace removes from history
             }
         })
@@ -56,10 +56,6 @@ $(document).on('click','#btnSignIn',function(){
 })
 
 //for creating new users
-/*$(document).on('click','#btnCreateNewAccount', function(){
-    window.location.href='createAcc.html';
-})*/
-
 $(document).on('click', '#btnCreate', function(){
     var newAccount = $.post('https://swollenhippo.com/DS3870/Tasks/newAccount.php', {strUsername:$('#txtEmail').val(),strPassword:$('#txtPassword').val()}, function(result){
     console.log(JSON.parse(result).Outcome);
@@ -72,14 +68,14 @@ $(document).on('click', '#btnCreate', function(){
                 icon:'error',
                 title:'User Account not Created',
                 html: '<p> try again </p>'
-            }) 
+            }).then((result)=>{window.location.href='login.html';})
         }
         if(newAccount.Outcome == 'User Already Exists'){
             Swal.fire({
                 icon:'error',
                 title:'User Already Exists',
                 html: '<p> Login with your existing credentials </p>'
-            })
+            }).then((result)=>{window.location.href='login.html';})
             
         }
         else{
@@ -87,15 +83,55 @@ $(document).on('click', '#btnCreate', function(){
                 icon:'success',
                 title:'Account Created Successfully',
                 html: '<p> Please login with your credentials </p>'
-            })
+            }).then((result)=>{window.location.href='login.html';})
             
         }
     })
-    /*
-        what code should be used in order to wait until the user presses 'ok' on the sweetalert, then return back to the login page. I've tried using
-            window.location.href='login.html';
-        that returns the user before they can read and acknowledge the sweetalert message.
-    */
+})
+
+//adding a task
+$(document).on('click', '#btnAddTask', function(result){
+    let strSesID= sessionStorage.getItem('HippoTaskID');
+
+    $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php', {strSessionID: 'strSesID'}, function(result){
+        if(result.Outcome == 'Valid Session'){
+            let strTaskNames = $('#txtTaskName').val();
+            let strLocations = $('#txtLocation').val();
+            let strDate = $('#txtDueDate').val();
+            let strNote = $('#txtNotes').val();
+            $.post('https://www.swollenhippo.com/DS3870/Tasks/newTask.php', {strSessionID: strSesID, strLocation:strLocations, strTaskName: strTaskNames, strNotes: strNote}, function(result){
+                let object = JSON.parse(result);
+                if(object.Outcome != 'Error'){
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title:'Task Added.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    $('#txtTaskName').val('');
+                    $('#txtLocation').val('');
+                    $('#txtDueDate').val('');
+                    $('#txtNotes').val('');
+                } else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Title Not Added',
+                        html: <p> Verify your task data and try again.</p>
+                    })
+                }
+            })
+        } else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Expired Session',
+                html: '<p>Oops, appears your session has expired.</p>'
+            }).then((result)=>{
+                sessionStorage.removeItem('HippoTaskID');
+                window.location.href = 'login.html';
+            })
+        }
+    })
 })
 
 function validateUsername(strUsername){
