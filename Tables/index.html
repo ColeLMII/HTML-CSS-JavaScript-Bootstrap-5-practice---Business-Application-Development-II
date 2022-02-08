@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>HippoTask</title>
+  <link rel="stylesheet" href="css/lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/lib/main.css">
+  <link rel="stylesheet" href="css/lib/datatables.min.css">
+
+</head>
+<body class="">
+  <div class="col-10 offset-1">
+    <table class="table" id="tblSales">
+      <thead> 
+        <tr>
+          <th>Month</th><th>Sales</th><th>Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+          
+      </tbody>
+    </table>
+  </div>
+
+  
+  <script src="js/lib/jquery-3.6.0.min.js"></script> 
+  <script src="js/lib/bootstrap.bundle.min.js"></script>
+  <script src="js/lib/sweetalert.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lib/datatables.min.js"></script>
+  <script>
+    $.getJSON('https://www.swollenhippo.com/getPayStubsByAPIKey.php?',{APIKey:'DuffManSays,Phrasing!'},function(result){
+      console.log(result);
+
+      $.each(result,function(i,paystub){
+        console.log(paystub);
+        let strTableHTML='<tr> <td>' + paystub.Month + ' </td><td> '+ paystub.Sales + ' </td><td> '+ paystub.Rate +' </td> </tr>';
+        $('#tblSales tbody').append(strTableHTML);
+      })
+
+      $('#tblSales').DataTable();
+    })
+  </script>
+</body>
+</html>
