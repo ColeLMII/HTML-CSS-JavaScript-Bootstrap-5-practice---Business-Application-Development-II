@@ -16,7 +16,7 @@
     <input id="txtDueDate" type="datetime-local" class="form-control mt-3" aria-label="Due Date" required>
     <input id="txtNotes" row="3" class="form-control mt-3"aria-label="Task Notes" maxlength="64000" required> 
     <div class="d-flex fw-bold justify-content-center mt-2" aria label="Submit Task">
-      <button class="btn btn-block btn-info"> Submit Task </button>
+      <button class="btn btn-block btn-info" id="btnAddTask"> Submit Task </button>
     </div>
 
   </div>
@@ -28,6 +28,7 @@
   <script>
       if(sessionStorage.getItem('HippoTaskID')){
         let strmySessionID= sessionStorage.getItem('HippoTaskID');
+        //console.log(strmySessionID);
         $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php?strSessionID='+ strmySessionID, function(result){
           if(result.Outcome!='Valid Session'){
               Swal.fire({
@@ -35,7 +36,7 @@
               title: 'Expired Session',
               html: '<p>Oops appears your session has expired.</p>'
             }).then((result)=>{
-              sessStorage.removeItem('HippoTaskID');
+              sessionStorage.removeItem('HippoTaskID');
               window.location.href="login.html";
             })
           }

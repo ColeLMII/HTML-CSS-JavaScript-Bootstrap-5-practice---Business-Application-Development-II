@@ -45,8 +45,9 @@ $(document).on('click','#btnSignIn',function(){
                     title:'Login Failed',
                     html: '<p> Review Username and Password </p>'
                 })
-            } else{
+            } else{ 
                 sessionStorage.setItem('HippoTaskID', objNewSessionPromise.Outcome);
+                console.log(objNewSessionPromise);
                 window.location.href='index.html'; //window.location.replace removes from history
             }
         })
@@ -94,6 +95,7 @@ $(document).on('click', '#btnAddTask', function(result){
     let strSesID= sessionStorage.getItem('HippoTaskID');
 
     $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php', {strSessionID: 'strSesID'}, function(result){
+        console.log(result);
         if(result.Outcome == 'Valid Session'){
             let strTaskNames = $('#txtTaskName').val();
             let strLocations = $('#txtLocation').val();
