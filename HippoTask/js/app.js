@@ -101,7 +101,7 @@ $(document).on('click', '#btnAddTask', function(result){
             let strLocations = $('#txtLocation').val();
             let strDate = $('#txtDueDate').val();
             let strNote = $('#txtNotes').val();
-            $.post('https://www.swollenhippo.com/DS3870/Tasks/newTask.php', {strSessionID: strSesID, strLocation:strLocations, strTaskName: strTaskNames, strNotes: strNote}, function(result){
+            $.post('https://www.swollenhippo.com/DS3870/Tasks/newTask.php', {strSessionID: strSesID,datDueDate: strDate, strLocation:strLocations, strTaskName: strTaskNames, strNotes: strNote}, function(result){
                 let object = JSON.parse(result);
                 if(object.Outcome != 'Error'){
                     Swal.fire({
@@ -115,6 +115,7 @@ $(document).on('click', '#btnAddTask', function(result){
                     $('#txtLocation').val('');
                     $('#txtDueDate').val('');
                     $('#txtNotes').val('');
+                    fillTasks();
                 } else{
                     Swal.fire({
                         icon: 'error',
@@ -139,12 +140,12 @@ $(document).on('click', '#btnAddTask', function(result){
 function fillTasks(){
     $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/getTasks.php', {strSessionID:sessionStorage.getItem('HippoTaskID')}, function(result){
         console.log(result); 
-        $('#tblTasks tbody').empty();
+        $('#tblTasks tbody').empty(); //EMPTY-REBUILD
         $.each(result,function(i,tblTasks){
             if(tblTasks.Status == 'ACTIVE'){
                 console.log(tblTasks);
                 
-                let strTableHTML='<tr> <td>' + tblTasks.strTaskName + ' </td><td> '+ tblTasks.strLocation + ' </td><td> '+ tblTasks.strDate +' </td><td> '+ tblTasks.strNotes +' </td><td><button class="btn btn-success btnTaskComplete"data-taskid="'+ tblTasks.TaskID+'">Complete</button>  <button class="btn btn-danger btnTaskDelete"data-taskid="'+ tblTasks.TaskID+'">Delete</button></td> </tr>';
+                let strTableHTML='<tr> <td>' + tblTasks.Name + ' </td><td> '+ tblTasks.Location + ' </td><td> '+ tblTasks.DueDate +' </td><td> '+ tblTasks.Notes +' </td><td><button class="btn btn-success btnTaskComplete"data-taskid="'+ tblTasks.TaskID+'">Complete</button>  <button class="btn btn-danger btnTaskDelete"data-taskid="'+ tblTasks.TaskID+'">Delete</button></td> </tr>';
                 $('#tblTasks tbody').append(strTableHTML); 
             }
             //$('#tblTasks').DataTable();
@@ -154,27 +155,25 @@ function fillTasks(){
 
 $(document).on('click', '#toggleAdd', function(){
     $('#divAddNewTask').slideToggle();
-    //$('#').slideUp();
 })
 
 $(document).on('click', '.btnTaskComplete', function(){
     console.log('complete' + $(this).attr('data-TaskID'));
     let strTaskID=$(this).attr('data-TaskID');
-    let sessionID=sessionStorage.getTIem('HippoTaskID');
+    let sessionID=sessionStorage.getItem('HippoTaskID');
 
-    $.post('https://swollenhippo.com/DS3870/Tasks/markTaskComplete.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
+    $.post('https://swollenhippo.com/DS3870/Tasks/markTaskComplete.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(result){
         console.log(result);
         fillTasks();
     })
 })
 
 $(document).on('click', '.btnTaskDelete', function(){
-    console.log('delete' +$(this).attr('data-TaskID'));
+    console.log('delete'+ ' ' +$(this).attr('data-TaskID'));
     let strTaskID=$(this).attr('data-TaskID');
-    let sessionID=sessionStorage.getTIem('HippoTaskID');
+    let sessionID=sessionStorage.getItem('HippoTaskID');
 
     $.post('https://swollenhippo.com/DS3870/Tasks/deleteTask.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
-        console.log(result);
         fillTasks();
     })
 })

@@ -6,27 +6,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>HippoTask</title>
   <link rel="stylesheet" href="css/lib/bootstrap.min.css">
-  <link rel="stylesheet" href="css/lib/main.css"
+  <link rel="stylesheet" href="css/lib/main.css">
+  
 </head>
-<body>
+
+<body class="bg-info">
   <div class="col-8 container-fluid " style="display:none;" id="divAddNewTask">
-    <h1 class="mt-3 text-center">Task Menu </h1>
+    <h1 class="mt-3 text-center text-white">Task Menu </h1>
       <input id="txtTaskName" type="text" class="form-control mt-5" placeholder="Task Name" aria-label="Task Name" maxlength="250" minlength="10" required>
       <input id="txtLocation" type="text" class="form-control mt-3" placeholder="Location of Task" aria-label="Enter Location of Task" maxlength="250" minlength="10" required>
       <input id="txtDueDate" type="datetime-local" class="form-control mt-3" aria-label="Due Date" required>
       <input id="txtNotes" row="3" class="form-control mt-3"aria-label="Task Notes" maxlength="64000" required> 
-      <div class="d-flex fw-bold justify-content-center mt-2" aria label="Submit Task">
-        <button class="btn btn-block btn-info" id="btnAddTask"> Submit Task </button>
+      <div class="d-flex fw-bold justify-content-center mt-4" aria label="Submit Task">
+        <button class="btn btn-block btn-success" id="btnAddTask"> Submit Task </button>
     </div>
-
   </div>
 
   <div class="col-10 offset-1 mt-5" id="divTaskTable">
-    <button class="btn btn-primary" id="toggleAdd">Toggle Add</button>
-    <table class="table" id="tblTasks">
+  <div class="d-flex fw-bold justify-content-center mt-2" aria label="Toggle Add">
+    <button class="btn btn-danger" id="toggleAdd"> Toggle Add </button>
+  </div>
+    <table class="table bg-secondary table-striped mt-5 justify-content-center" id="tblTasks">
       <thead> 
         <tr>
-          <th>Task Name</th><th>Location</th><th>Due Date</th><th>Notes</th><th></th>
+          <th class="text-white">Task Name</th><th class="text-white">Location</th><th class="text-white">Due Date</th><th class="text-white">Notes</th><th></th>
         </tr>
       </thead>
       <tbody>
