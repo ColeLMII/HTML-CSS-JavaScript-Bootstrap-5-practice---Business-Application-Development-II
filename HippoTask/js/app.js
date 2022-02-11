@@ -94,7 +94,7 @@ $(document).on('click', '#btnCreate', function(){
 $(document).on('click', '#btnAddTask', function(result){
     let strSesID= sessionStorage.getItem('HippoTaskID');
 
-    $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php', {strSessionID: 'strSesID'}, function(result){
+    $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/verifySession.php', {strSessionID: strSesID}, function(result){
         console.log(result);
         if(result.Outcome == 'Valid Session'){
             let strTaskNames = $('#txtTaskName').val();
@@ -133,6 +133,49 @@ $(document).on('click', '#btnAddTask', function(result){
                 window.location.href = 'login.html';
             })
         }
+    })
+})
+
+function fillTasks(){
+    $.getJSON('https://www.swollenhippo.com/DS3870/Tasks/getTasks.php', {strSessionID:sessionStorage.getItem('HippoTaskID')}, function(result){
+        console.log(result); 
+        $('#tblTasks tbody').empty();
+        $.each(result,function(i,tblTasks){
+            if(tblTasks.Status == 'ACTIVE'){
+                console.log(tblTasks);
+                
+                let strTableHTML='<tr> <td>' + tblTasks.strTaskName + ' </td><td> '+ tblTasks.strLocation + ' </td><td> '+ tblTasks.strDate +' </td><td> '+ tblTasks.strNotes +' </td><td><button class="btn btn-success btnTaskComplete"data-taskid="'+ tblTasks.TaskID+'">Complete</button>  <button class="btn btn-danger btnTaskDelete"data-taskid="'+ tblTasks.TaskID+'">Delete</button></td> </tr>';
+                $('#tblTasks tbody').append(strTableHTML); 
+            }
+            //$('#tblTasks').DataTable();
+        })
+    })
+}
+
+$(document).on('click', '#toggleAdd', function(){
+    $('#divAddNewTask').slideToggle();
+    //$('#').slideUp();
+})
+
+$(document).on('click', '.btnTaskComplete', function(){
+    console.log('complete' + $(this).attr('data-TaskID'));
+    let strTaskID=$(this).attr('data-TaskID');
+    let sessionID=sessionStorage.getTIem('HippoTaskID');
+
+    $.post('https://swollenhippo.com/DS3870/Tasks/markTaskComplete.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
+        console.log(result);
+        fillTasks();
+    })
+})
+
+$(document).on('click', '.btnTaskDelete', function(){
+    console.log('delete' +$(this).attr('data-TaskID'));
+    let strTaskID=$(this).attr('data-TaskID');
+    let sessionID=sessionStorage.getTIem('HippoTaskID');
+
+    $.post('https://swollenhippo.com/DS3870/Tasks/deleteTask.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
+        console.log(result);
+        fillTasks();
     })
 })
 
