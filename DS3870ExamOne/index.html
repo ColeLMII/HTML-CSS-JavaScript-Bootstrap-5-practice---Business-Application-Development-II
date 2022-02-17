@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Database</title>
+    <link rel="stylesheet" href="css/lib/bootstrap.min.css">
+
+</head>
+<body class="bg-primary">
+    <div class="card col-12 col-md-8 offset-md-2 mt-3" id="divUserInfo">
+        <div class="card-header">
+            <h3>Logged In User Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="row col-12">
+                <h4 class="col-4">First Name: <span id="spFirstName"></span></h4>
+                <h4 class="col-4">Last Name: <span id="spLastName"></span></h4>
+            </div>
+            <div class="row col-12">
+                <h4 class="col-4">Username: <span id="spUsername"></span></h4>
+            </div>
+        </div>
+    </div>
+    <div class="card col-12 col-md-8 offset-md-2 mt-3" id="divAddNew">
+        <div class="card-header">
+            <h3>Add New Character</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="txtCharacterName" class="form-label mb-0" maxlength="250" minlength="10">Character Name</label>
+                <input id="txtCharacterName" type="text" class="form-control" required>
+            </div>
+            <div class="form-group mt-2">
+                <label for="txtSuperPower" class="form-label mb-0" maxlength="250" minlength="10">Super Power</label>
+                <input id="txtSuperPower" type="text" class="form-control" required>
+            </div>
+            <div class="form-group mt-2">
+                <label for="txtLocation" class="form-label mb-0" maxlength="250" minlength="10">Location</label>
+                <input id="txtLocation" type="text" class="form-control" required>
+            </div>
+            <div class="form-group mt-2">
+                <label for="selectStatus" class="form-label mb-0">Status</label>
+                <select id="selectStatus" class="form-control">
+                    <option>Alive</option>
+                    <option>Deceased</option>
+                </select>
+            </div>
+            
+            <button id="btnAddCharacter" class="btn btn-success col-12 mt-3" type="button">Add Character</button>
+        </div>
+    </div>
+    <div class="card col-12 col-md-8 offset-md-2 mt-3">
+        <div class="card-header">
+            <div class="row col-12">
+                <h3 class="col-4">Current Characters</h3>
+                <button class="btn btn-primary col-2 offset-6 float-right" id="btnToggleExisting">Toggle Existing</button>
+            </div>
+        </div>
+        <div class="card-body" id="divCharacters" style="display:none;">
+            <table class="table" id="tblCharacters">
+                <thead>
+                    <tr><th>Character Name</th><th>Super Power</th><th>Location</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        if(sessionStorage.getItem('CharacterSession')){
+        let strmySessionID= sessionStorage.getItem('CharacterSession');
+        //console.log(strmySessionID);
+        $.getJSON('https://www.swollenhippo.com/DS3870/Comics/verifySession.php?strSessionID='+ strmySessionID, function(result){
+          if(result.Outcome!='Valid Session'){
+              Swal.fire({
+              icon: 'error',
+              title: 'Expired Session',
+              html: '<p>Oops appears your session has expired.</p>'
+            }).then((result)=>{
+              sessionStorage.removeItem('CharacterSession');
+              window.location.href="login.html";
+            })
+          } else{
+            fillCharacterTable();
+          }
+        })
+      } else{
+        window.location.href="login.html";
+      }
+    </script>
+
+    <script src="js/lib/jquery-3.6.0.min.js"></script>
+    <script src="js/lib/sweetalert.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
