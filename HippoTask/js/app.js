@@ -148,7 +148,7 @@ function fillTasks(){
                 let strTableHTML='<tr> <td>' + tblTasks.Name + ' </td><td> '+ tblTasks.Location + ' </td><td> '+ tblTasks.DueDate +' </td><td> '+ tblTasks.Notes +' </td><td><button class="btn btn-success btnTaskComplete"data-taskid="'+ tblTasks.TaskID+'">Complete</button>  <button class="btn btn-danger btnTaskDelete"data-taskid="'+ tblTasks.TaskID+'">Delete</button></td> </tr>';
                 $('#tblTasks tbody').append(strTableHTML); 
             }
-            //$('#tblTasks').DataTable();
+            $('#tblTasks').DataTable();
         })
     })
 }
