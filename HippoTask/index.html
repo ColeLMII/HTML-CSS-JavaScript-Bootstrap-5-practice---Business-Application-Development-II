@@ -10,9 +10,17 @@
   
 </head>
 
-<body class="bg-info">
+<body class="">
+  <div class="col-10">
+      <div class="container-fluid offset-1">
+        <h1 class="mt-3 text-center">Task Menu </h1>
+      </div>
+      <div class="text-end">
+          <button class="btn btn-block btn-danger" id="btnLogOut">Log Out</button>
+      </div>
+  </div> 
   <div class="col-8 container-fluid " style="display:none;" id="divAddNewTask">
-    <h1 class="mt-3 text-center text-white">Task Menu </h1>
+    <h1 class="mt-3 text-center"> New Submission </h1>
       <input id="txtTaskName" type="text" class="form-control mt-5" placeholder="Task Name" aria-label="Task Name" maxlength="250" minlength="10" required>
       <input id="txtLocation" type="text" class="form-control mt-3" placeholder="Location of Task" aria-label="Enter Location of Task" maxlength="250" minlength="10" required>
       <input id="txtDueDate" type="datetime-local" class="form-control mt-3" aria-label="Due Date" required>

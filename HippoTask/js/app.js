@@ -31,7 +31,7 @@ $(document).on('click','#btnSignIn',function(){
           })
     }else{
         /*
-            do not do this in production this is unprotected API
+            do not do this in production, this is unprotected API
         */
         var objNewSessionPromise= $.post('https://www.swollenhippo.com/DS3870/Tasks/newSession.php', { strUsername:$('#txtEmail').val(), strPassword:$('#txtPassword').val() }, function(result){
             //console.log(JSON.parse(result).Outcome);
@@ -59,8 +59,8 @@ $(document).on('click','#btnSignIn',function(){
 //for creating new users
 $(document).on('click', '#btnCreate', function(){
     var newAccount = $.post('https://swollenhippo.com/DS3870/Tasks/newAccount.php', {strUsername:$('#txtEmail').val(),strPassword:$('#txtPassword').val()}, function(result){
-    console.log(JSON.parse(result).Outcome);
-    newAccount = JSON.parse(result);
+        console.log(JSON.parse(result).Outcome);
+        newAccount = JSON.parse(result);
     })
 
     $.when(newAccount).done(function(){
@@ -101,7 +101,7 @@ $(document).on('click', '#btnAddTask', function(result){
             let strLocations = $('#txtLocation').val();
             let strDate = $('#txtDueDate').val();
             let strNote = $('#txtNotes').val();
-            $.post('https://www.swollenhippo.com/DS3870/Tasks/newTask.php', {strSessionID: strSesID,datDueDate: strDate, strLocation:strLocations, strTaskName: strTaskNames, strNotes: strNote}, function(result){
+            $.post('https://www.swollenhippo.com/DS3870/Tasks/newTask.php', {strSessionID: strSesID, datDueDate: strDate, strLocation:strLocations, strTaskName: strTaskNames, strNotes: strNote}, function(result){
                 let object = JSON.parse(result);
                 if(object.Outcome != 'Error'){
                     Swal.fire({
@@ -173,8 +173,32 @@ $(document).on('click', '.btnTaskDelete', function(){
     let strTaskID=$(this).attr('data-TaskID');
     let sessionID=sessionStorage.getItem('HippoTaskID');
 
-    $.post('https://swollenhippo.com/DS3870/Tasks/deleteTask.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
-        fillTasks();
+    Swal.fire({
+        title: 'Are you sure you want to DELETE this Task?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Delete.',
+        denyButtonText: `No.`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            $.post('https://swollenhippo.com/DS3870/Tasks/deleteTask.php',{strSessionID: sessionID , strTaskID: strTaskID}, function(){
+                fillTasks();
+            })
+
+            Swal.fire('Deleted!', '', 'success')
+        } else if (result.isDenied) {
+          Swal.fire('Action Canceled.', '', 'info')
+        }
+      })
+})
+
+$(document).on('click', '#btnLogOut', function(){
+    let sesID= sessionStorage.getItem('HippoTaskID');
+    
+    $.post('https://www.swollenhippo.com/DS3870/Tasks/killSession.php',{strSessionID:sesID}, function(result){
+        console.log(result);
+        window.location.href="login.html";
     })
 })
 
