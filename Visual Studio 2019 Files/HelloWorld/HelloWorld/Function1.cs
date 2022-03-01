@@ -30,10 +30,6 @@ namespace HelloWorld
             lstAnimals.Add("Chicken");
 
             string strAnimal = req.Query["strAnimal"];
-            /*lstAnimals.Add("Pig");
-            lstAnimals.Add("Cow");
-            lstAnimals.Add("Hippo");
-            lstAnimals.Add("Chicken");*/
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
@@ -45,7 +41,10 @@ namespace HelloWorld
             if (strAnimal != "" && strAnimal != null){ 
                 foreach(string strCurrentAnimal in lstAnimals)
                 {
-                    blnFound = true;
+                    if (strCurrentAnimal == strAnimal)
+                    {
+                        blnFound = true;
+                    }
                 }
             }
 
@@ -57,12 +56,6 @@ namespace HelloWorld
             {
                 return new OkObjectResult("Animal Not Found");
             }
-
-            /*
-                string responseMessage = string.IsNullOrEmpty(strFirstName)
-                ? "Pass name"
-                : $"{strFirstName} {strLastName}";
-            */
         }
     }
 }
