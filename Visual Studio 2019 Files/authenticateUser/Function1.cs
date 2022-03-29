@@ -7,8 +7,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Collections.Generic;// to access the List Functionality
+using Microsoft.Data.Sqlite; // used for
 
 
 namespace authenticateUser
