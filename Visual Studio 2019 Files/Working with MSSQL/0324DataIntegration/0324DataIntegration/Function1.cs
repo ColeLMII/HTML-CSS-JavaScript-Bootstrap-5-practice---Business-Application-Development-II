@@ -14,49 +14,134 @@ namespace _0324DataIntegration
 {
     public static class Function1
     {
-        [FunctionName("Function1")]
+        [FunctionName("Users")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string strFirstName = req.Query["strFirstName"];
-            //creating the connection to the database
             string strConnection = @"Server=PCLABSQL01\COB_DS2,1436;Database=DS3870;User Id=student;Password=Mickey2020!;";
-            string strQuery = "select * from dbo.tblUsers;";
-            //string strQuery = "insert into dbo.tblUsers (email,firstname,lastname,status,password)values('lmcoleman@tntech.edu', 'Larenzle','Coleman','Active','apassword')";
-            DataSet dsUsers = new DataSet();
-
-            //
-            using (SqlConnection conDS3870 = new SqlConnection(strConnection))
-            using (SqlCommand comDS3870 = new SqlCommand(strQuery, conDS3870))
+            
+            if (req.Method == HttpMethods.Post)
             {
-                /*
-                //manaually accessing the database
-                comDS3870.Connection = conDS3870;
-                    comDS3870.CommandText = strQuery;
+                string strFirstName = req.Query["FirstName"];
+                string strLastName = req.Query["LastName"];
+                string strEmail = req.Query["Email"];
+                string strPassword = req.Query["Password"];
+                bool blnError = false;
+                string strErrorMessage = "";
+
+                //validations for parameters
+                {
+                    if (strEmail.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "email cannot be blank";
+                    }
+                    if (strPassword.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "email cannot be blank";
+                    }
+                    if (strEmail.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "email cannot be blank";
+                    }
+                    if (strFirstName.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "First Name cannot be blank";
+                    }
+                    if (strLastName.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "Last Name cannot be blank";
+                    }
+
+                    if (blnError == true)
+                    {
+                        return new OkObjectResult(strErrorMessage);
+                    }
+                }
+
+                //creating the connection to the database
+                //string strQuery = "select * from dbo.tblUsers;";
+                string strQuery = "insert into dbo.tblUsers (email,firstname,lastname,status,password)values(@Email, @FirstName,@LastName,@Status,@Password)";
+                DataSet dsUsers = new DataSet();
+
+                //
+                using (SqlConnection conDS3870 = new SqlConnection(strConnection))
+                using (SqlCommand comDS3870 = new SqlCommand(strQuery, conDS3870))
+                {
+                    //used to prevent sql injections
+                    SqlParameter parEmail = new SqlParameter("Email", SqlDbType.VarChar);
+                    parEmail.Value = strEmail;
+                    comDS3870.Parameters.Add(parEmail);
+
+                    SqlParameter parFirstName = new SqlParameter("FirstName", SqlDbType.VarChar);
+                    parFirstName.Value = strFirstName;
+                    comDS3870.Parameters.Add(parFirstName);
+
+                    SqlParameter parLastName = new SqlParameter("LastName", SqlDbType.VarChar);
+                    parLastName.Value = strLastName;
+                    comDS3870.Parameters.Add(parLastName);
+
+                    SqlParameter parPassword = new SqlParameter("Password", SqlDbType.VarChar);
+                    parPassword.Value = strPassword;
+                    comDS3870.Parameters.Add(parPassword);
+
                     conDS3870.Open();
                     comDS3870.ExecuteNonQuery();
                     conDS3870.Close();
-                return new OkObjectResult("User Added");
-                */
-
-
-                ///*
-                //used to prevent sql injections
-                SqlParameter parFirstName = new SqlParameter("FirstName", SqlDbType.VarChar);
-                parFirstName.Value = strFirstName;
-                comDS3870.Parameters.Add(parFirstName);
-
-                //used to fill the dataset
-                SqlDataAdapter daDS3870 = new SqlDataAdapter(comDS3870);
-                daDS3870.Fill(dsUsers);
-                return new OkObjectResult(dsUsers.Tables[0]);//return Data Table back
-                //*/
-
+                    return new OkObjectResult("User Added");
+                    /*
+                    //used to fill the dataset
+                    SqlDataAdapter daDS3870 = new SqlDataAdapter(comDS3870);
+                    daDS3870.Fill(dsUsers);
+                    return new OkObjectResult(dsUsers.Tables[0]);//return Data Table back
+                    */
+                }
             }
-                return new OkObjectResult("Tests");
+
+            else if (req.Method == HttpMethods.Get) {
+                string strEmail = req.Query["Email"];
+                
+                DataSet dsUsers = new DataSet();
+
+                if (strEmail == null || strEmail == " ")
+                {
+                    string strQuery = "select * from dbo.tblUsers;";
+                    dsUsers = new DataSet();
+
+                    using (SqlConnection conDS3870 = new SqlConnection(strConnection))
+                    using (SqlCommand comDS3870 = new SqlCommand(strQuery, conDS3870))
+                    {
+                        SqlDataAdapter daDS3870 = new SqlDataAdapter(comDS3870);
+                        daDS3870.Fill(dsUsers);
+                        return new OkObjectResult(dsUsers.Tables[0]);//return Data Table back
+                    }
+                }
+                else
+                {
+                    string strQuery = "select * from dbo.tblUsers where Email = @Email;";
+                    dsUsers = new DataSet();
+
+                    using (SqlConnection conDS3870 = new SqlConnection(strConnection))
+                    using (SqlCommand comDS3870 = new SqlCommand(strQuery, conDS3870))
+                    {
+                        SqlParameter parEmail = new SqlParameter("Email", SqlDbType.VarChar);
+                        parEmail.Value = strEmail;
+                        comDS3870.Parameters.Add(parEmail);
+
+                        SqlDataAdapter daUsers = new SqlDataAdapter(comDS3870);
+                        daUsers.Fill(dsUsers);
+                        return new OkObjectResult(dsUsers.Tables[0]);
+                    }
+                }
+            }
+
+            else { return new OkObjectResult("You can only perform a GET or POST"); } 
         }
     }
 }
