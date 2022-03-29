@@ -37,16 +37,6 @@ namespace _0324DataIntegration
                         blnError = true;
                         strErrorMessage += Environment.NewLine + "email cannot be blank";
                     }
-                    if (strPassword.Length < 0)
-                    {
-                        blnError = true;
-                        strErrorMessage += Environment.NewLine + "email cannot be blank";
-                    }
-                    if (strEmail.Length < 0)
-                    {
-                        blnError = true;
-                        strErrorMessage += Environment.NewLine + "email cannot be blank";
-                    }
                     if (strFirstName.Length < 0)
                     {
                         blnError = true;
@@ -57,7 +47,11 @@ namespace _0324DataIntegration
                         blnError = true;
                         strErrorMessage += Environment.NewLine + "Last Name cannot be blank";
                     }
-
+                    if (strPassword.Length < 0)
+                    {
+                        blnError = true;
+                        strErrorMessage += Environment.NewLine + "Password cannot be blank";
+                    }
                     if (blnError == true)
                     {
                         return new OkObjectResult(strErrorMessage);
@@ -66,7 +60,7 @@ namespace _0324DataIntegration
 
                 //creating the connection to the database
                 //string strQuery = "select * from dbo.tblUsers;";
-                string strQuery = "insert into dbo.tblUsers (email,firstname,lastname,status,password)values(@Email, @FirstName,@LastName,@Status,@Password)";
+                string strQuery = "insert into dbo.tblUsers (email,firstname,lastname,status,password)values(@Email, @FirstName,@LastName,'Active',@Password)";
                 DataSet dsUsers = new DataSet();
 
                 using (SqlConnection conDS3870 = new SqlConnection(strConnection))
@@ -76,27 +70,21 @@ namespace _0324DataIntegration
                     SqlParameter parEmail = new SqlParameter("Email", SqlDbType.VarChar);
                     parEmail.Value = strEmail;
                     comDS3870.Parameters.Add(parEmail);
-
-                    SqlParameter parFirstName = new SqlParameter("FirstName", SqlDbType.VarChar);
-                    parFirstName.Value = strFirstName;
-                    comDS3870.Parameters.Add(parFirstName);
-
+                        SqlParameter parFirstName = new SqlParameter("FirstName", SqlDbType.VarChar);
+                        parFirstName.Value = strFirstName;
+                        comDS3870.Parameters.Add(parFirstName);
                     SqlParameter parLastName = new SqlParameter("LastName", SqlDbType.VarChar);
                     parLastName.Value = strLastName;
                     comDS3870.Parameters.Add(parLastName);
-
-                    SqlParameter parStatus = new SqlParameter("Status", SqlDbType.VarChar);
-                    parStatus.Value = strLastName;
-                    comDS3870.Parameters.Add(parStatus);
-
-                    SqlParameter parPassword = new SqlParameter("Password", SqlDbType.VarChar);
-                    parPassword.Value = strPassword;
-                    comDS3870.Parameters.Add(parPassword);
-                    /* //manually accessing your connection
-                    conDS3870.Open();
-                    comDS3870.ExecuteNonQuery();
-                    conDS3870.Close();
-                    return new OkObjectResult("User Added");
+                        SqlParameter parPassword = new SqlParameter("Password", SqlDbType.VarChar);
+                        parPassword.Value = strPassword;
+                        comDS3870.Parameters.Add(parPassword);
+                    /* 
+                        //manually accessing your connection
+                        conDS3870.Open();
+                        comDS3870.ExecuteNonQuery();
+                        conDS3870.Close();
+                        return new OkObjectResult("User Added");
                     */
                     
                     //used to fill the dataset
